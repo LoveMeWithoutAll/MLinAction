@@ -49,7 +49,9 @@ def makeScatterPlot(datingDataMat, datingLabels):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.scatter(datingDataMat[:, 0], datingDataMat[:, 1],
-               15.0 * array(datingLabels), 15.0 * array(datingLabels))  # X: air mile / Y: game time
+               15*array(datingLabels), 15*array(datingLabels),
+               edgecolor='g',
+               cmap='Greens')  # X: air mile / Y: game time
     plt.show()
 
 
@@ -93,19 +95,19 @@ def classifyPerson():
 
 
 if __name__ == '__main__':
-    # datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
-    # normMat, ranges, minVals = autoNorm(datingDataMat)
-    # print('normMat')
-    # print(normMat)
-    # print()
-    # print('datingLabels')
-    # print(datingLabels)
-    # print()
-    # print('ranges')
-    # print(ranges)
-    # print()
-    # print('minVals')
-    # print(minVals)
-    # makeScatterPlot(normMat, datingLabels)
+    datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
+    normMat, ranges, minVals = autoNorm(datingDataMat)
+    print('normMat')
+    print(normMat)
+    print()
+    print('datingLabels')
+    print(datingLabels)
+    print()
+    print('ranges')
+    print(ranges)
+    print()
+    print('minVals')
+    print(minVals)
+    makeScatterPlot(normMat, datingLabels)
     # datingClassTest()
-    classifyPerson()
+    # classifyPerson()
