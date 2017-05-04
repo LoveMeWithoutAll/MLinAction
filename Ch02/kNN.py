@@ -94,20 +94,17 @@ def classifyPerson():
     print("You will probably like this person: %s" % resultList[classifierResult - 1])
 
 
+def img2vector(filename):
+    returnVect = zeros((1,1024))
+    fr = open(filename)
+    for i in range(32):
+        lineStr = fr.readline()
+        for j in range(32):
+            returnVect[0,32*i+j] = int(lineStr[j])
+    return returnVect
+
+
 if __name__ == '__main__':
-    datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
-    normMat, ranges, minVals = autoNorm(datingDataMat)
-    print('normMat')
-    print(normMat)
-    print()
-    print('datingLabels')
-    print(datingLabels)
-    print()
-    print('ranges')
-    print(ranges)
-    print()
-    print('minVals')
-    print(minVals)
-    makeScatterPlot(normMat, datingLabels)
-    # datingClassTest()
-    # classifyPerson()
+    testVector = img2vector('testDigits/0_13.txt')
+    print(testVector[0, 0:31])
+    print(testVector[0, 32:63])
