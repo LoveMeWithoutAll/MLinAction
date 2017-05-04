@@ -53,11 +53,29 @@ def makeScatterPlot(datingDataMat, datingLabels):
     plt.show()
 
 
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet - tile(minVals, (m,1))
+    normDataSet = normDataSet/tile(ranges, (m,1))   #element wise divide
+    return normDataSet, ranges, minVals
+
+
 if __name__ == '__main__':
     datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
-    print('datingDataMat')
-    print(datingDataMat)
+    normMat, ranges, minVals = autoNorm(datingDataMat)
+    print('normMat')
+    print(normMat)
     print()
     print('datingLabels')
     print(datingLabels)
-    makeScatterPlot(datingDataMat, datingLabels)
+    print()
+    print('ranges')
+    print(ranges)
+    print()
+    print('minVals')
+    print(minVals)
+    makeScatterPlot(normMat, datingLabels)
