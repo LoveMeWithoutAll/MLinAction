@@ -25,23 +25,23 @@ def classify0(inX, dataSet, labels, k):
 
 
 def file2matrix(filename):
-    love_dictionary={'largeDoses': 3, 'smallDoses': 2, 'didntLike': 1}
+    love_dictionary = {'largeDoses': 3, 'smallDoses': 2, 'didntLike': 1}
     fr = open(filename)
     arrayOLines = fr.readlines()
-    numberOfLines = len(arrayOLines)            #get the number of lines in the file
-    returnMat = zeros((numberOfLines,3))        #prepare matrix to return
-    classLabelVector = []                       #prepare labels return
+    numberOfLines = len(arrayOLines)  # get the number of lines in the file
+    returnMat = zeros((numberOfLines, 3))  # prepare matrix to return
+    classLabelVector = []  # prepare labels return
     index = 0
     for line in arrayOLines:
         line = line.strip()
         listFromLine = line.split('\t')
-        returnMat[index,:] = listFromLine[0:3]
-        if(listFromLine[-1].isdigit()):
+        returnMat[index, :] = listFromLine[0:3]
+        if (listFromLine[-1].isdigit()):
             classLabelVector.append(int(listFromLine[-1]))
         else:
             classLabelVector.append(love_dictionary.get(listFromLine[-1]))
         index += 1
-    return returnMat,classLabelVector
+    return returnMat, classLabelVector
 
 
 def makeScatterPlot(datingDataMat, datingLabels):
@@ -49,7 +49,7 @@ def makeScatterPlot(datingDataMat, datingLabels):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.scatter(datingDataMat[:, 0], datingDataMat[:, 1],
-               15.0*array(datingLabels), 15.0*array(datingLabels))  # X: air mile / Y: game time
+               15.0 * array(datingLabels), 15.0 * array(datingLabels))  # X: air mile / Y: game time
     plt.show()
 
 
@@ -59,23 +59,40 @@ def autoNorm(dataSet):
     ranges = maxVals - minVals
     normDataSet = zeros(shape(dataSet))
     m = dataSet.shape[0]
-    normDataSet = dataSet - tile(minVals, (m,1))
-    normDataSet = normDataSet/tile(ranges, (m,1))   #element wise divide
+    normDataSet = dataSet - tile(minVals, (m, 1))
+    normDataSet = normDataSet / tile(ranges, (m, 1))  # element wise divide
     return normDataSet, ranges, minVals
 
 
-if __name__ == '__main__':
-    datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
+def datingClassTest():
+    hoRatio = 0.10  # hold out 10%
+    datingDataMat, datingLabels = file2matrix('datingTestSet.txt')  # load data setfrom file
     normMat, ranges, minVals = autoNorm(datingDataMat)
-    print('normMat')
-    print(normMat)
-    print()
-    print('datingLabels')
-    print(datingLabels)
-    print()
-    print('ranges')
-    print(ranges)
-    print()
-    print('minVals')
-    print(minVals)
-    makeScatterPlot(normMat, datingLabels)
+    m = normMat.shape[0]
+    numTestVecs = int(m * hoRatio)
+    errorCount = 0.0
+    for i in range(numTestVecs):
+        classifierResult = classify0(normMat[i, :], normMat[numTestVecs:m, :], datingLabels[numTestVecs:m], 3)
+        print("the classifier came back with: %d, the real answer is: %d" % (classifierResult, datingLabels[i]))
+        if classifierResult != datingLabels[i]:
+            errorCount += 1.0
+    print("the total error rate is: %f" % (errorCount / float(numTestVecs)))
+    print(errorCount)
+
+
+if __name__ == '__main__':
+    # datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
+    # normMat, ranges, minVals = autoNorm(datingDataMat)
+    # print('normMat')
+    # print(normMat)
+    # print()
+    # print('datingLabels')
+    # print(datingLabels)
+    # print()
+    # print('ranges')
+    # print(ranges)
+    # print()
+    # print('minVals')
+    # print(minVals)
+    # makeScatterPlot(normMat, datingLabels)
+    datingClassTest()
