@@ -1,5 +1,6 @@
 from numpy import *
 import operator
+import matplotlib.pyplot as plt
 
 
 def createDataSet():
@@ -42,6 +43,16 @@ def file2matrix(filename):
         index += 1
     return returnMat,classLabelVector
 
+
+def makeScatterPlot(datingDataMat, datingLabels):
+    # prerequirement: sudo apt-get install python3-tk
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(datingDataMat[:, 0], datingDataMat[:, 1],
+               15.0*array(datingLabels), 15.0*array(datingLabels))  # X: air mile / Y: game time
+    plt.show()
+
+
 if __name__ == '__main__':
     datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
     print('datingDataMat')
@@ -49,3 +60,4 @@ if __name__ == '__main__':
     print()
     print('datingLabels')
     print(datingLabels)
+    makeScatterPlot(datingDataMat, datingLabels)
