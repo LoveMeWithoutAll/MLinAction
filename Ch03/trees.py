@@ -1,5 +1,6 @@
 from math import log
 import operator
+from treePlotter import retrieveTree
 
 
 def calcShannonEnt(dataset):
@@ -58,7 +59,7 @@ def chooseBestFeatureToSplit(dataSet):
 
 
 def majorityCnt(classList):
-    classCount={}
+    classCount = {}
     for vote in classList:
         if vote not in classCount.keys():
             classCount[vote] = 0
@@ -76,16 +77,32 @@ def createTree(dataSet, labels):
     bestFeat = chooseBestFeatureToSplit(dataSet)
     bestFeatLabel = labels[bestFeat]
     myTree = {bestFeatLabel: {}}
-    del(labels[bestFeat])
+    del (labels[bestFeat])
     featValues = [example[bestFeat] for example in dataSet]
     uniqueVals = set(featValues)
     for value in uniqueVals:
-        subLabels = labels[:]       # copy all of labels, so trees don't mess up existing labels
+        subLabels = labels[:]  # copy all of labels, so trees don't mess up existing labels
         myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
     return myTree
 
 
+def classify(inputTree, featLabels, testVec):
+    firstStr = list(inputTree)[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)
+    key = testVec[featIndex]
+    valueOfFeat = secondDict[key]
+    if isinstance(valueOfFeat, dict):
+        classLabel = classify(valueOfFeat, featLabels, testVec)
+    else:
+        classLabel = valueOfFeat
+    return classLabel
+
+
 if __name__ == '__main__':
     myDat, labels = createDataSet()
-    myTree = createTree(myDat, labels)
+    print(labels)
+    myTree = retrieveTree(0)
     print(myTree)
+    print(classify(myTree, labels, [1, 0]))
+    print(classify(myTree, labels, [1, 1]))
