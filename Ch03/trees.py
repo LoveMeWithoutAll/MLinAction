@@ -99,10 +99,21 @@ def classify(inputTree, featLabels, testVec):
     return classLabel
 
 
+def storeTree(inputTree, filename):
+    import pickle
+    fw = open(filename, 'wb')
+    pickle.dump(inputTree, fw)
+    fw.close()
+
+
+def grabTree(filename):
+    import pickle
+    fr = open(filename, 'rb')
+    return pickle.load(fr)
+
+
 if __name__ == '__main__':
     myDat, labels = createDataSet()
-    print(labels)
     myTree = retrieveTree(0)
-    print(myTree)
-    print(classify(myTree, labels, [1, 0]))
-    print(classify(myTree, labels, [1, 1]))
+    storeTree(myTree, 'classifierStorage.txt')
+    print(grabTree('classifierStorage.txt'))
