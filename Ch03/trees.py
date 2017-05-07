@@ -1,6 +1,6 @@
 from math import log
 import operator
-from treePlotter import retrieveTree
+from treePlotter import createPlot
 
 
 def calcShannonEnt(dataset):
@@ -64,7 +64,7 @@ def majorityCnt(classList):
         if vote not in classCount.keys():
             classCount[vote] = 0
         classCount[vote] += 1
-    sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
+    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
 
 
@@ -113,7 +113,9 @@ def grabTree(filename):
 
 
 if __name__ == '__main__':
-    myDat, labels = createDataSet()
-    myTree = retrieveTree(0)
-    storeTree(myTree, 'classifierStorage.txt')
-    print(grabTree('classifierStorage.txt'))
+    fr = open('lenses.txt')
+    lenses = [inst.strip().split('\t') for inst in fr.readlines()]
+    lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
+    lensesTree = createTree(lenses, lensesLabels)
+    print(lensesTree)
+    createPlot(lensesTree)
